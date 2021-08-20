@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
  */
 public class MyFirstForm extends javax.swing.JFrame {
 
+    
     /**
      * Creates new form MyFirstForm
      */
@@ -100,16 +101,19 @@ public class MyFirstForm extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         new MySecondForm().setVisible(true);
-        this.setVisible(false);
+        // this.setVisible(false);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        int id = Integer.parseInt(JOptionPane.showInputDialog("ID code"));
+        new MyForthForm(id).setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
-
+    
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        new MyThirdForm().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
