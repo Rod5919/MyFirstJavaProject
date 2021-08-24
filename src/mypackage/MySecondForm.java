@@ -6,7 +6,10 @@
 package mypackage;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.util.Scanner;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -14,7 +17,7 @@ import javax.swing.JOptionPane;
  * @author rodri
  */
 public class MySecondForm extends javax.swing.JFrame {
-
+    private final String path = "/home/rodri/NetBeansProjects/talks_register/files/register.csv";
     /**
      * Creates new form MySecondForm
      */
@@ -70,23 +73,12 @@ public class MySecondForm extends javax.swing.JFrame {
             }
         });
 
-        nameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nameFieldActionPerformed(evt);
-            }
-        });
-
         jLabel1.setText("Name");
 
         jLabel3.setText("University");
 
         universityBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "UCB", "UPB", "UMSA", "UPEA", "UMSS" }));
-        universityBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                universityBoxActionPerformed(evt);
-            }
-        });
-
+        
         jLabel4.setText("Semester");
 
         semesterSlider.setMajorTickSpacing(1);
@@ -103,29 +95,30 @@ public class MySecondForm extends javax.swing.JFrame {
 
         talkSelection.add(jRadioButton2);
         jRadioButton2.setText("Talk 1");
-        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton2ActionPerformed(evt);
-            }
-        });
-
+       
         talkSelection.add(jRadioButton3);
         jRadioButton3.setText("Talk 3");
-        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton3ActionPerformed(evt);
-            }
-        });
-
+        
         jLabel5.setText("ID");
 
-        idNum.setEnabled(false);
-        idNum.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                idNumActionPerformed(evt);
+        int id = 0;
+        try {
+            File myObj = new File(this.path);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                System.out.println(data);
+              id++;
             }
-        });
-
+            myReader.close();
+          } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            JOptionPane.showMessageDialog(null,e,"ERROR",JOptionPane.ERROR_MESSAGE);
+          }
+        // System.out.println(id);
+        idNum.setText(""+id);
+        idNum.setEnabled(false);
+        
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -225,22 +218,31 @@ public class MySecondForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //TODO: Auto ID
         System.out.println(idNum.getText());
         System.out.println(nameField.getText());
         System.out.println(universityBox.getItemAt(universityBox.getSelectedIndex()));
         System.out.println(semesterSlider.getValue());
-        int talk;
-        if(jRadioButton2.isSelected())
-            System.out.println("1");
-            talk = 1;
-        if(jRadioButton1.isSelected())
-            System.out.println("2");
-            talk = 2;
-        if(jRadioButton3.isSelected())
-            System.out.println("3");
-            talk = 3;
-        try (FileWriter writer = new FileWriter(new File("/home/rodri/NetBeansProjects/talks_register/files/register.csv"),true)){
+        int talk = 0;
+        
+        while(talk == 0){
+            if(jRadioButton2.isSelected()){
+                System.out.println("1");
+                talk = 1;
+            }
+            else if(jRadioButton1.isSelected()){
+                System.out.println("2");
+                talk = 2;
+            }
+            else if(jRadioButton3.isSelected()){
+                System.out.println("3");
+                talk = 3;
+            }else{
+                JOptionPane.showMessageDialog(null, "No se ecogió ninguna charla", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+            
+        try (FileWriter writer = new FileWriter(new File(this.path),true)){
             StringBuilder sb = new StringBuilder();
             sb.append(idNum.getText());
             sb.append(",");
@@ -266,27 +268,6 @@ public class MySecondForm extends javax.swing.JFrame {
         // this.frame.setVisible(false);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton2ActionPerformed
-
-    private void idNumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idNumActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_idNumActionPerformed
-
-    private void nameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nameFieldActionPerformed
-
-    private void universityBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_universityBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_universityBoxActionPerformed
-
-    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton3ActionPerformed
-
     /**
      * @param args the command line arguments
      */

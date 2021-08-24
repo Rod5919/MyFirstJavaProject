@@ -5,12 +5,22 @@
  */
 package mypackage;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author rodri
  */
 public class MyForthForm extends javax.swing.JFrame {
     private int id;
+    private String mod_reg;
+    private final String path = "/home/rodri/NetBeansProjects/talks_register/files/register.csv";
     /**
      * Creates new form MyForthForm
      */
@@ -28,6 +38,7 @@ public class MyForthForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jSlider1 = new javax.swing.JSlider();
@@ -46,12 +57,7 @@ public class MyForthForm extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "UCB", "UPB", "UMSA", "UPEA", "UMSS" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
-            }
-        });
-
+        
         jLabel4.setText("Semester");
 
         jSlider1.setMajorTickSpacing(1);
@@ -66,24 +72,14 @@ public class MyForthForm extends javax.swing.JFrame {
         jRadioButton1.setText("Talk 2");
 
         jRadioButton2.setText("Talk 1");
-        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton2ActionPerformed(evt);
-            }
-        });
-
+        
         jRadioButton3.setText("Talk 3");
 
         jLabel5.setText("ID");
 
-        jTextField2.setText(""+this.id);
         jTextField2.setEnabled(false);
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
-            }
-        });
-
+        jTextField2.setText(""+this.id);
+        
         jLabel2.setText("New student");
 
         jButton1.setBackground(new java.awt.Color(51, 200, 59));
@@ -101,16 +97,69 @@ public class MyForthForm extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-
+        
         jLabel1.setText("Name");
 
         jLabel3.setText("University");
+        jLabel1.setText("Name");
+        jLabel3.setText("University");
+        
+        buttonGroup1.add(jRadioButton1);
+        buttonGroup1.add(jRadioButton2);
+        buttonGroup1.add(jRadioButton3);
+
+        String st="";
+        System.out.println(this.id);
+        try {
+            
+            File myObj = new File(this.path);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                st += data+"\n";
+                // System.out.println(data);
+            }
+            myReader.close();
+            String[] prv_aft = st.split("\n"+this.id+",");
+            System.out.println("");
+            String[] dat = prv_aft[1].split(",");
+            // System.out.println("dat[0]: "+dat[0]); // Name
+            // System.out.println("dat[1]: "+dat[1]); // University
+            // System.out.println("dat[2]: "+dat[2]); // Semester
+            // System.out.println("dat[3]: "+dat[3]); // Talk
+            jTextField1.setText(dat[0]);
+            jComboBox1.setSelectedItem(dat[1]);
+            jSlider1.setValue(Integer.parseInt(dat[2]));
+            switch (dat[3].charAt(0)) {
+                case '1':
+                    jRadioButton2.setSelected(true);
+                    break;
+                case '2':
+                    jRadioButton1.setSelected(true);
+                    break;
+                case '3':
+                    jRadioButton3.setSelected(true);
+                    break;
+            }
+            st = prv_aft[0];
+            st += "\n<<<<<new_data>>>>>\n";
+            if(dat.length > 4)
+                st += ""+(this.id+1)+",";
+            for (int i = 4; i < dat.length; i++) {
+                // System.out.println(dat[i]);
+                if(i == dat.length - 1)
+                    st+=dat[i];
+                else
+                    st+=dat[i]+",";
+            }
+            // System.out.println(st);
+            this.mod_reg = st;
+            
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            
+            JOptionPane.showMessageDialog(null,e,"ERROR",JOptionPane.ERROR_MESSAGE);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -185,9 +234,9 @@ public class MyForthForm extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jRadioButton3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jButton1)
-                                    .addComponent(jButton2)))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
@@ -199,31 +248,39 @@ public class MyForthForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
-
-    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton2ActionPerformed
-
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
+    
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         new MyFirstForm().setVisible(true);
         // this.frame.setVisible(false);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String[] arr_reg = this.mod_reg.split("<<<<<new_data>>>>>");
+        String st = ""+this.id+",";
+        st+=jTextField1.getText()+","+
+            jComboBox1.getItemAt(jComboBox1.getSelectedIndex())+","+
+            jSlider1.getValue()+",";
+        if (jRadioButton2.isSelected())
+            st+="1";
+        else if(jRadioButton1.isSelected())
+            st+="2";
+        else if(jRadioButton3.isSelected())
+            st+="3";
+        System.out.println("st: "+st);
+        System.out.println("arr_reg[1]: "+arr_reg[1]);
+        try {
+            FileWriter f2 = new FileWriter(this.path, false);
+            f2.write(arr_reg[0]+st+arr_reg[1]);
+            f2.close();
+            JOptionPane.showMessageDialog(null, "Register modified", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } 
+        new MyFirstForm().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     /**
      * @param args the command line arguments
@@ -262,6 +319,7 @@ public class MyForthForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JComboBox<String> jComboBox1;

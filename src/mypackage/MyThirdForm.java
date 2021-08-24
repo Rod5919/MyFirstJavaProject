@@ -11,7 +11,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -67,7 +66,7 @@ public class MyThirdForm extends javax.swing.JFrame {
             Object[] tableLines = br.lines().toArray();
             // data rows
             for (int i = 0; i < tableLines.length; i++) {
-                System.out.println("4");
+                // System.out.println("4");
                 String line = tableLines[i].toString().trim();
                 String[] dataRow = line.split(",");
                 vectorStrings = new Vector<String>();
